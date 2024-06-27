@@ -14,7 +14,7 @@ const Error = error{
 /// is generally an expensive process so the value should be cached.
 pub inline fn home(buf: []u8) !?[]u8 {
     return switch (builtin.os.tag) {
-        inline .linux, .macos => try homeUnix(buf),
+        inline .linux, .macos, .freebsd => try homeUnix(buf),
         .windows => try homeWindows(buf),
 
         // iOS doesn't have a user-writable home directory

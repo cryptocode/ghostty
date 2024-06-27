@@ -149,8 +149,8 @@ pub fn Buffer(comptime T: type) type {
 
             for (lists) |list| {
                 const ptr = @as([*]const u8, @ptrCast(list.items.ptr));
-                @memcpy(dst[i..][0..list.items.len*@sizeOf(T)], ptr);
-                i += list.items.len*@sizeOf(T);
+                @memcpy(dst[i..][0 .. list.items.len * @sizeOf(T)], ptr);
+                i += list.items.len * @sizeOf(T);
             }
 
             return total_len;

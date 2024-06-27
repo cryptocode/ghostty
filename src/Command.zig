@@ -305,9 +305,10 @@ fn setupFd(src: File.Handle, target: i32) !void {
                 }
             }
         },
-        .ios, .macos => {
+        .ios, .macos, .freebsd => {
             // Mac doesn't support dup3 so we use dup2. We purposely clear
             // CLO_ON_EXEC for this fd.
+            // Note: FreeBSD *does* have dup3, but this is not yet exposed by Zig
             const flags = try posix.fcntl(src, posix.F.GETFD, 0);
             if (flags & posix.FD_CLOEXEC != 0) {
                 _ = try posix.fcntl(src, posix.F.SETFD, flags & ~@as(u32, posix.FD_CLOEXEC));

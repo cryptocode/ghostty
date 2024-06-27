@@ -56,6 +56,8 @@ pub fn launchedFromDesktop() bool {
         // iPhone/iPad is always launched from the "desktop"
         .ios => true,
 
+        // For now we assume the program was launched from the desktop on FreeBSD
+        .freebsd => true,
         else => @compileError("unsupported platform"),
     };
 }
