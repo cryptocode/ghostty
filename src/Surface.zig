@@ -710,7 +710,11 @@ pub fn handleMessage(self: *Surface, msg: Message) !void {
             // We know that our title should end in 0.
             const slice = std.mem.sliceTo(@as([*:0]const u8, @ptrCast(v)), 0);
             log.debug("changing title \"{s}\"", .{slice});
-            try self.rt_surface.setTitle(slice);
+            const leader: []const u8 = ":👻:";
+            if (std.mem.startsWith(u8, slice, leader)) {
+                const action = input.Binding.Action.parse(slice[leader.len..]) catch return;
+                _ = self.performBindingAction(action) catch return;
+            } else try self.rt_surface.setTitle(slice);
         },
 
         .report_title => |style| {
@@ -3165,7 +3169,7 @@ fn showMouse(self: *Surface) void {
 /// NOTE: At the time of writing this comment, only previous/next tab
 /// will ever return false. We can expand this in the future if it becomes
 /// useful. We did previous/next tab so we could implement #498.
-pub fn performBindingAction(self: *Surface, action: input.Binding.Action) !bool {
+pub fn performBindingAction(self: *Surface, action: input.Binding.Action) anyerror!bool {
     switch (action) {
         .unbind => unreachable,
         .ignore => {},
